@@ -4,6 +4,11 @@
 node_modules/
 .venv/
 __pycache__/
+data/
+attachments/
+*.db
+*.db-wal
+*.db-shm
 target/
 dist/
 build/
