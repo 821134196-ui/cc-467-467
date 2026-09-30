@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>发电机试运行与燃油补给平台</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z" fill="#E5A800"/>
+    </svg>
+    <div>
+      <h1>备用发电机运维平台</h1>
+      <span class="sub">试运行 · 燃油补给 · 维修封锁</span>
+    </div>
+  </div>
+  <nav class="nav" id="nav">
+    <button data-view="overview" class="active">机组总览</button>
+    <button data-view="calendar">试运行日历</button>
+    <button data-view="run">步骤执行</button>
+    <button data-view="trends">参数趋势</button>
+    <button data-view="shutdowns">故障停机</button>
+    <button data-view="fuel">燃油台账</button>
+    <button data-view="approvals">审批记录</button>
+  </nav>
+  <div class="who">
+    <label for="userSelect">当前人员</label>
+    <select id="userSelect"></select>
+  </div>
+</header>
+
+<div id="reminderBar" class="reminder-bar hidden"></div>
+
+<main id="main">
+  <!-- 机组总览 -->
+  <section id="view-overview" class="view">
+    <div class="view-head">
+      <h2>机组总览</h2>
+      <p class="hint">每台机组以单行参数带展示；带 <span class="lock-inline">🔒</span> 的机组处于维修封锁，不能启动且不计入应急可用容量。</p>
+    </div>
+    <div id="capacityBand" class="capacity-band"></div>
+    <div id="genList" class="gen-list"></div>
+  </section>
+
+  <!-- 试运行日历 -->
+  <section id="view-calendar" class="view hidden">
+    <div class="view-head">
+      <h2>试运行日历</h2>
+      <p class="hint">计划须经工程主管批准后方可执行；取消将留痕。</p>
+    </div>
+    <div class="card">
+      <h3>新建试运行计划</h3>
+      <form id="planForm" class="form-row">
+        <select name="generator" required></select>
+        <input type="datetime-local" name="scheduled_local" step="60" required>
+        <input type="number" name="duration_min" value="30" min="5" step="5" title="时长（分钟）">
+        <select name="assignee" title="值班员"></select>
+        <button type="submit" class="btn btn-yellow">提交待批</button>
+      </form>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+    <div class="card">
+      <h3>全部计划</h3>
+      <table class="table" id="plansTable">
+        <thead><tr><th>计划号</th><th>机组</th><th>楼宇</th><th>计划时间</th><th>时长</th><th>值班员</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 步骤执行 -->
+  <section id="view-run" class="view hidden">
+    <div class="view-head">
+      <h2>试运行步骤执行</h2>
+      <p class="hint">外观 → 油位 → 电池 → 空载启动 → 带载测试，沿纵向依次完成；越过步骤须工程主管批准。</p>
+    </div>
+    <div class="run-layout">
+      <div class="card" id="sessionPicker">
+        <h3>选择已获批计划开始</h3>
+        <div id="startablePlans" class="startable-list"></div>
+      </div>
+      <div id="runPanel" class="run-panel hidden">
+        <div class="card run-head-card" id="runHead"></div>
+        <div class="steps-col" id="stepsCol"></div>
+        <div class="card" id="endPanel"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 参数趋势 -->
+  <section id="view-trends" class="view hidden">
+    <div class="view-head">
+      <h2>运行参数趋势</h2>
+      <p class="hint">模拟适配器每 2 秒采样；浅色带为合格区间。</p>
+    </div>
+    <div class="trend-controls card">
+      <select id="trendGen"></select>
+      <label><input type="radio" name="trendRange" value="5" checked> 近 5 分钟</label>
+      <label><input type="radio" name="trendRange" value="10"> 近 10 分钟</label>
+      <label><input type="radio" name="trendRange" value="30"> 近 30 分钟</label>
+      <span class="spacer"></span>
+      <button class="btn btn-ghost" data-inject="voltage_sag">模拟电压骤降</button>
+      <button class="btn btn-ghost" data-inject="voltage_surge">模拟电压骤升</button>
+      <button class="btn btn-ghost" data-inject="freq_high">模拟频率越限</button>
+    </div>
+    <div id="trendCharts" class="trend-charts"></div>
+  </section>
+
+  <!-- 故障停机 -->
+  <section id="view-shutdowns" class="view hidden">
+    <div class="view-head">
+      <h2>故障停机留痕</h2>
+      <p class="hint">启动失败、电压越限、异常噪声、漏油、带载中断均在此留痕。</p>
+    </div>
+    <div class="filters" id="shutdownFilters"></div>
+    <div id="shutdownList" class="event-list"></div>
+    <div class="card" style="margin-top:16px">
+      <h3>现场附件（照片/记录，本地目录存储）</h3>
+      <form id="attachForm" class="form-row">
+        <select name="category">
+          <option value="fault">故障留证</option>
+          <option value="refuel">加油凭证</option>
+          <option value="step">步骤记录</option>
+        </select>
+        <input type="text" name="ref_id" placeholder="关联号（会话/加油记录号，可空）" style="min-width:200px">
+        <input type="file" name="file" required>
+        <button class="btn btn-yellow" type="submit">上传附件</button>
+      </form>
+      <table class="table" id="attachTable" style="margin-top:10px">
+        <thead><tr><th>时间</th><th>分类</th><th>关联</th><th>文件名</th><th>大小</th><th>上传人</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 燃油台账 -->
+  <section id="view-fuel" class="view hidden">
+    <div class="view-head">
+      <h2>燃油台账与加油记录</h2>
+      <p class="hint">试运行结束按实测液位结算并核对理论消耗；加油数量修订须第二人复核。</p>
+    </div>
+    <div id="fuelBalanceBand" class="capacity-band"></div>
+    <div class="two-col">
+      <div class="card">
+        <h3>加油登记</h3>
+        <form id="refuelForm" class="form-stack">
+          <select name="generator" required></select>
+          <input type="number" name="liters" placeholder="加油数量（升）" min="1" step="0.1" required>
+          <input type="text" name="note" placeholder="备注（油单编号等）">
+          <button class="btn btn-yellow" type="submit">登记（待第二人复核）</button>
+        </form>
+      </div>
+      <div class="card">
+        <h3>加油记录复核</h3>
+        <table class="table" id="refuelsTable">
+          <thead><tr><th>记录号</th><th>机组</th><th>登记数量</th><th>登记人</th><th>状态</th><th>复核</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>燃油台账（最近 200 条）</h3>
+      <table class="table" id="ledgerTable">
+        <thead><tr><th>时间</th><th>机组</th><th>变动（L）</th><th>余额（L）</th><th>类型</th><th>关联</th><th>经办人</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 审批记录 -->
+  <section id="view-approvals" class="view hidden">
+    <div class="view-head">
+      <h2>审批记录</h2>
+      <p class="hint">计划审批与越步批准均仅工程主管可操作，全部留痕。</p>
+    </div>
+    <div class="card">
+      <table class="table" id="approvalsTable">
+        <thead><tr><th>时间</th><th>机组</th><th>类型</th><th>关联计划/步骤</th><th>结论</th><th>原因</th><th>审批人</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div id="modalRoot"></div>
+<div id="toast" class="toast hidden"></div>
+<script src="/app.js"></script>
+</body>
+</html>

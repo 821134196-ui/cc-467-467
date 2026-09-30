@@ -1,0 +1,250 @@
+:root{
+  --gray-900:#2E3338; --gray-700:#3D434A; --gray-600:#5A6169;
+  --gray-400:#9AA1A9; --gray-300:#C7CCD1; --gray-200:#E7E9EB;
+  --gray-100:#F2F3F4; --gray-50:#F8F9F9;
+  --yellow:#E5A800; --yellow-deep:#9A6F00; --yellow-soft:#FCF3D9;
+  --green:#2F7D32; --green-soft:#E5F1E5;
+  --red:#B42318; --red-soft:#FBEAE8;
+  --ink:#23272B; --ink-2:#5A6169; --ink-3:#8A9199;
+  --surface:#FFFFFF; --border:#DDE0E3;
+  --radius:8px; --shadow:0 1px 3px rgba(46,51,56,.08), 0 1px 2px rgba(46,51,56,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  background:var(--gray-100); color:var(--ink); font-size:14px; line-height:1.5;
+}
+h1,h2,h3{margin:0;font-weight:600}
+.hidden{display:none !important}
+
+/* ---------- 顶栏 ---------- */
+.topbar{
+  display:flex; align-items:center; gap:24px;
+  background:var(--gray-700); color:#fff; padding:10px 20px;
+  border-bottom:3px solid var(--yellow); flex-wrap:wrap;
+}
+.brand{display:flex; align-items:center; gap:10px; min-width:230px}
+.brand h1{font-size:16px; letter-spacing:.5px}
+.brand .sub{font-size:12px; color:var(--gray-300)}
+.nav{display:flex; gap:2px; flex-wrap:wrap}
+.nav button{
+  background:transparent; border:none; color:var(--gray-300);
+  padding:8px 12px; border-radius:6px; cursor:pointer; font-size:13.5px;
+}
+.nav button:hover{background:var(--gray-600); color:#fff}
+.nav button.active{background:var(--yellow); color:var(--gray-900); font-weight:600}
+.who{margin-left:auto; display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--gray-300)}
+.who select{background:var(--gray-600); color:#fff; border:1px solid var(--gray-400); border-radius:6px; padding:5px 8px}
+
+/* ---------- 提醒条 ---------- */
+.reminder-bar{background:var(--yellow-soft); border-bottom:1px solid var(--yellow); padding:8px 20px}
+.reminder-item{display:flex; align-items:center; gap:10px; padding:3px 0; color:var(--yellow-deep); font-size:13px}
+.reminder-item .dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);flex:none}
+.reminder-item button{margin-left:auto}
+
+main{padding:20px; max-width:1280px; margin:0 auto}
+.view-head{margin-bottom:14px}
+.view-head h2{font-size:19px; color:var(--gray-900)}
+.hint{color:var(--ink-3); font-size:12.5px; margin:4px 0 0}
+.lock-inline{color:var(--gray-700)}
+
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:16px; margin-bottom:16px;
+}
+.card h3{font-size:14.5px; color:var(--gray-700); margin-bottom:12px}
+
+/* ---------- 容量带 ---------- */
+.capacity-band{display:flex; gap:0; border-radius:var(--radius); overflow:hidden; margin-bottom:16px;
+  border:1px solid var(--border); background:#fff; box-shadow:var(--shadow)}
+.cap-cell{flex:1; padding:12px 18px; border-right:1px solid var(--border)}
+.cap-cell:last-child{border-right:none}
+.cap-cell .lab{font-size:12px; color:var(--ink-3)}
+.cap-cell .val{font-size:22px; font-weight:700; font-variant-numeric:tabular-nums}
+.cap-cell.ok .val{color:var(--green)} .cap-cell.lock .val{color:var(--gray-600)}
+.cap-cell.fault .val{color:var(--red)} .cap-cell.total .val{color:var(--gray-900)}
+
+/* ---------- 机组单行参数带 ---------- */
+.gen-list{display:flex; flex-direction:column; gap:10px}
+.gen-band{
+  display:grid; grid-template-columns:minmax(170px,1.3fr) repeat(5,minmax(105px,1fr)) minmax(150px,1.2fr);
+  align-items:center; gap:0; background:#fff; border:1px solid var(--border);
+  border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
+}
+.gen-band.locked{background:repeating-linear-gradient(45deg,#fff,#fff 14px,#F4F5F6 14px,#F4F5F6 28px)}
+.gen-id{padding:12px 16px; border-right:1px solid var(--border)}
+.gen-id .gname{font-weight:600; color:var(--gray-900)}
+.gen-id .gbuilding{font-size:12px; color:var(--ink-3)}
+.gauge{padding:10px 14px; border-right:1px solid var(--gray-200)}
+.gauge .lab{font-size:11px; color:var(--ink-3); display:flex; justify-content:space-between}
+.gauge .lab .range{color:var(--gray-400)}
+.gauge .num{font-size:17px; font-weight:600; font-variant-numeric:tabular-nums}
+.gauge .num small{font-size:11px; font-weight:400; color:var(--ink-3)}
+.gauge.ok .num{color:var(--green)}
+.gauge.bad .num{color:var(--red)}
+.gauge.idle .num{color:var(--gray-400)}
+.fuel-track{height:6px; background:var(--gray-200); border-radius:3px; margin-top:5px; overflow:hidden}
+.fuel-fill{height:100%; background:var(--yellow); border-radius:3px}
+.fuel-fill.low{background:var(--red)}
+.gen-status{padding:10px 14px}
+.badge{display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px;
+  font-size:12px; font-weight:600; white-space:nowrap}
+.badge.standby{background:var(--gray-200); color:var(--gray-700)}
+.badge.running{background:var(--green-soft); color:var(--green)}
+.badge.start_failed,.badge.shutdown{background:var(--red-soft); color:var(--red)}
+.badge.locked_out{background:var(--gray-700); color:#fff}
+.lock-note{display:block; font-size:11.5px; color:var(--gray-600); margin-top:4px; font-weight:400}
+.gen-actions{display:flex; gap:6px; padding:10px 12px; flex-wrap:wrap}
+
+/* ---------- 按钮 / 表单 ---------- */
+.btn{border:1px solid var(--gray-400); background:#fff; color:var(--gray-700);
+  padding:6px 12px; border-radius:6px; cursor:pointer; font-size:13px; white-space:nowrap}
+.btn:hover{border-color:var(--gray-600)}
+.btn-yellow{background:var(--yellow); border-color:var(--yellow); color:var(--gray-900); font-weight:600}
+.btn-yellow:hover{background:#D29B00}
+.btn-green{background:var(--green); border-color:var(--green); color:#fff; font-weight:600}
+.btn-red{background:#fff; border-color:var(--red); color:var(--red)}
+.btn-ghost{border-style:dashed}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+select,input[type=text],input[type=number],input[type=datetime-local]{
+  border:1px solid var(--gray-300); border-radius:6px; padding:7px 9px; font-size:13px;
+  background:#fff; color:var(--ink);
+}
+.form-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.form-stack{display:flex; flex-direction:column; gap:10px}
+.form-stack input,.form-stack select{width:100%}
+
+/* ---------- 日历 ---------- */
+.calendar-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:16px}
+.cal-dow{text-align:center; font-size:12px; color:var(--ink-3); padding:4px}
+.cal-cell{min-height:86px; background:#fff; border:1px solid var(--border); border-radius:6px;
+  padding:5px 6px; font-size:11.5px}
+.cal-cell.other{background:var(--gray-50); color:var(--gray-400)}
+.cal-cell.today{border-color:var(--yellow); box-shadow:inset 0 0 0 1px var(--yellow)}
+.cal-date{font-weight:600; color:var(--gray-700); font-size:12px}
+.cal-ev{margin-top:3px; padding:2px 5px; border-radius:4px; font-size:11px; line-height:1.35; cursor:default}
+.cal-ev.pending{background:var(--gray-200); color:var(--gray-700)}
+.cal-ev.approved{background:var(--yellow-soft); color:var(--yellow-deep); border-left:3px solid var(--yellow)}
+.cal-ev.running{background:var(--green-soft); color:var(--green); border-left:3px solid var(--green)}
+.cal-ev.completed{background:var(--green-soft); color:var(--green)}
+.cal-ev.failed,.cal-ev.canceled,.cal-ev.rejected{background:var(--red-soft); color:var(--red)}
+
+/* ---------- 表格 ---------- */
+.table{width:100%; border-collapse:collapse; font-size:13px}
+.table th{text-align:left; color:var(--ink-3); font-weight:500; font-size:12px;
+  padding:8px 10px; border-bottom:1px solid var(--border); white-space:nowrap}
+.table td{padding:9px 10px; border-bottom:1px solid var(--gray-100); vertical-align:top}
+.table tr:last-child td{border-bottom:none}
+.table .mono{font-variant-numeric:tabular-nums}
+.pos{color:var(--green); font-weight:600}.neg{color:var(--red); font-weight:600}
+
+/* ---------- 步骤执行（纵向） ---------- */
+.run-layout{display:grid; grid-template-columns:280px 1fr; gap:16px; align-items:start}
+.startable-list{display:flex; flex-direction:column; gap:8px}
+.startable{border:1px solid var(--border); border-radius:6px; padding:10px 12px}
+.startable .t{font-weight:600; font-size:13px}
+.startable .m{font-size:12px; color:var(--ink-3); margin:2px 0 8px}
+.run-head-card{border-left:4px solid var(--yellow)}
+.run-head-card.running{border-left-color:var(--green)}
+.run-meta{display:flex; gap:24px; flex-wrap:wrap; font-size:13px}
+.run-meta b{font-variant-numeric:tabular-nums}
+.steps-col{display:flex; flex-direction:column; gap:10px}
+.step{
+  background:#fff; border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:14px 18px; display:grid;
+  grid-template-columns:34px 150px 1fr auto; gap:14px; align-items:center;
+  border-left:4px solid var(--gray-300);
+}
+.step.done{border-left-color:var(--green); background:var(--gray-50)}
+.step.fail{border-left-color:var(--red); background:var(--red-soft)}
+.step.skipped{border-left-color:var(--gray-400); background:var(--gray-100)}
+.step.active{border-left-color:var(--yellow); box-shadow:0 0 0 2px var(--yellow-soft), var(--shadow)}
+.step-num{width:28px;height:28px;border-radius:50%; background:var(--gray-200); color:var(--gray-700);
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.step.done .step-num{background:var(--green); color:#fff}
+.step.fail .step-num{background:var(--red); color:#fff}
+.step.skipped .step-num{background:var(--gray-400); color:#fff}
+.step-title{font-weight:600}
+.step-title .st{display:block; font-size:11.5px; font-weight:400; margin-top:2px}
+.st-pass{color:var(--green)}.st-fail{color:var(--red)}.st-skipped{color:var(--gray-600)}.st-pending{color:var(--ink-3)}
+.step-readouts{display:flex; gap:18px; flex-wrap:wrap}
+.ro{font-size:12.5px}
+.ro .k{color:var(--ink-3); font-size:11.5px}
+.ro .v{font-size:15px; font-weight:600; font-variant-numeric:tabular-nums}
+.ro .v small{font-size:11px; color:var(--ink-3); font-weight:400}
+.ro.ok .v{color:var(--green)} .ro.bad .v{color:var(--red)} .ro.dim .v{color:var(--gray-400)}
+.step-actions{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end}
+.step-note{grid-column:2 / -1; font-size:12.5px; color:var(--ink-2); margin-top:2px}
+.step-checkrow{display:flex; gap:14px; flex-wrap:wrap; align-items:center; font-size:12.5px; margin-bottom:8px}
+.load-live{font-size:12px; color:var(--ink-3)}
+
+/* ---------- 趋势 ---------- */
+.trend-controls{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+.trend-controls .spacer{flex:1}
+.trend-charts{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.chart-card{background:#fff; border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:14px 16px}
+.chart-card h3{display:flex; justify-content:space-between; align-items:baseline}
+.chart-card h3 .now{font-size:18px; font-variant-numeric:tabular-nums}
+.chart-card h3 .now.ok{color:var(--green)} .chart-card h3 .now.bad{color:var(--red)}
+svg.chart{width:100%; height:170px; display:block}
+.chart-band{fill:var(--green-soft)}
+.chart-line{fill:none; stroke:var(--gray-700); stroke-width:2}
+.chart-line.fuel{stroke:var(--yellow-deep)}
+.chart-grid{stroke:var(--gray-200); stroke-width:1}
+.chart-axis{fill:var(--ink-3); font-size:10px}
+.chart-cross{stroke:var(--gray-400); stroke-width:1; stroke-dasharray:3 3}
+.chart-dot{fill:var(--gray-700)}
+.chart-dot.fuel{fill:var(--yellow-deep)}
+.chart-tip{position:fixed; pointer-events:none; background:var(--gray-900); color:#fff;
+  padding:5px 9px; border-radius:5px; font-size:11.5px; z-index:50; white-space:nowrap}
+
+/* ---------- 事件/故障 ---------- */
+.filters{display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap}
+.filters .btn.on{background:var(--gray-700); color:#fff; border-color:var(--gray-700)}
+.event-list{display:flex; flex-direction:column; gap:8px}
+.event{background:#fff; border:1px solid var(--border); border-radius:var(--radius);
+  padding:11px 16px; display:grid; grid-template-columns:150px 90px 1fr auto; gap:12px; align-items:center}
+.event.critical{border-left:4px solid var(--red)}
+.event.warning{border-left:4px solid var(--yellow)}
+.event.info{border-left:4px solid var(--gray-300)}
+.event .ts{font-size:12px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+.sev{font-size:12px; font-weight:600; padding:2px 8px; border-radius:12px; text-align:center; width:fit-content}
+.sev.critical{background:var(--red-soft); color:var(--red)}
+.sev.warning{background:var(--yellow-soft); color:var(--yellow-deep)}
+.sev.info{background:var(--gray-200); color:var(--gray-700)}
+.event .msg{font-size:13px}
+.event .cat{font-size:11.5px; color:var(--ink-3)}
+
+/* ---------- 燃油 ---------- */
+.two-col{display:grid; grid-template-columns:320px 1fr; gap:16px; align-items:start}
+
+/* ---------- 模态 ---------- */
+.modal-mask{position:fixed; inset:0; background:rgba(46,51,56,.45); display:flex;
+  align-items:center; justify-content:center; z-index:40; padding:20px}
+.modal{background:#fff; border-radius:10px; width:min(520px,100%); box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.modal header{padding:14px 18px; border-bottom:1px solid var(--border); font-weight:600;
+  color:var(--gray-900); display:flex; justify-content:space-between; align-items:center}
+.modal .body{padding:16px 18px; display:flex; flex-direction:column; gap:10px}
+.modal footer{padding:12px 18px; border-top:1px solid var(--border); display:flex;
+  justify-content:flex-end; gap:8px}
+.modal label{font-size:12.5px; color:var(--ink-2); display:flex; flex-direction:column; gap:4px}
+.modal .ro-line{font-size:13px; color:var(--ink-2)}
+.modal .perm{color:var(--red); font-size:12.5px}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:var(--gray-900); color:#fff; padding:10px 18px; border-radius:8px;
+  font-size:13px; z-index:60; box-shadow:0 6px 20px rgba(0,0,0,.25); max-width:80vw}
+.toast.err{background:var(--red)}
+.toast.ok{background:var(--green)}
+
+@media (max-width:1000px){
+  .gen-band{grid-template-columns:1fr 1fr}
+  .trend-charts,.two-col,.run-layout{grid-template-columns:1fr}
+  .step{grid-template-columns:30px 1fr; }
+  .step-readouts,.step-actions,.step-note{grid-column:1 / -1}
+  .event{grid-template-columns:1fr; gap:4px}
+  .calendar-grid{grid-template-columns:repeat(2,1fr)}
+}
